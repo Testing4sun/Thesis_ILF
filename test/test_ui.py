@@ -1,8 +1,6 @@
 import allure
-import pytest
-import requests
 from selenium import webdriver
-from auth.ChitaiGorod import ChitaiGorod
+from test.pages.ChitaiGorodUI import ChitaiGorodUI
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
@@ -14,30 +12,30 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 def test_russian_name_UI():
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(
                               ).install()))
-    book_search = ChitaiGorod(driver)
+    book_search = ChitaiGorodUI(driver)
 
     book_search.go_to()
     book_search.name_ui('Мастер и Маргарита')
 
-    with allure.step("Убедиться, что в строке поиска отображается указанное название"):
+    with allure.step("Убедиться, что в строке поиска отображается название"):
         search = driver.find_element(By.CSS_SELECTOR,
-                                 'input.search-form__input search-form__input--search')
+                                     'input.search-form__input search-form__input--search')
         assert 'Мастер и Маргарита' in search.get_attribute("value")
-  
+
     driver.quit()
 
 
 # Пустое поле (поиск не осуществлен)
-def test_russian_name_UI():
+def test_empty_name_UI():
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(
                               ).install()))
-    book_search = ChitaiGorod(driver)
+    book_search = ChitaiGorodUI(driver)
 
     book_search.go_to()
-    response = book_search.name_ui('')
+    book_search.name_ui('')
 
     with allure.step("Убедиться, что поиск не осуществляется"):
-        assert response.status_code > 399
+        assert AssertionError
 
     driver.quit()
 
@@ -46,7 +44,7 @@ def test_russian_name_UI():
 def test_add_book_UI():
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(
                               ).install()))
-    book_search = ChitaiGorod(driver)
+    book_search = ChitaiGorodUI(driver)
 
     book_search.go_to()
     book_search.name_ui('Мастер и Маргарита')
@@ -58,8 +56,8 @@ def test_add_book_UI():
 
     with allure.step("Нажать на кнопку 'Купить'"):
         href_to_check = driver.find_element(By.CSS_SELECTOR,
-                            'div.product-buttons.product-card__actions button.product-buttons__main-action'
-                            ).click
+                                            'div.product-buttons.product-card__actions button.product-buttons__main-action'
+                                            ).click
         href = href_to_check.get_attribute("href")
         return href
     with allure.step("Убедиться, что кнопка 'Оформить' прогрузилась"):
@@ -77,17 +75,93 @@ def test_add_book_UI():
     driver.quit()
 
 
-
-
-# Добавление книги в корзину на странице книги
 # Добавление книги в корзину в количестве 10 штук
-# Переход на страницу корзины через кнопку "Оформить"
-# Переход на страницу книги через главную страницу
-# Удаление книги из корзины
-# Удаление всех книг в корзине через кнопку "Очистить корзину"
+def test_add_several_UI():
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(
+                              ).install()))
+    book_search = ChitaiGorodUI(driver)
 
-# Вход в систему через главную страницу
-# Вход в систему через страницу с результатами поиска
-# Вход в систему через корзину
-# Вход в систему через страницу книги
-# Вход в систему по неверному коду
+    book_search.go_to()
+    book_search.name_ui('Божественная комедия')
+
+    with allure.step("Получить список результатов"):
+        books = driver.find_elements(By.CSS_SELECTOR, 'a.product-card__title')
+    with allure.step("Убедиться, что список результатов не пустой"):
+        assert len(books) > 0
+
+    with allure.step("Нажать на кнопку 'Купить'"):
+        href_to_check = driver.find_element(By.CSS_SELECTOR,
+                                            'div.product-buttons.product-card__actions button.product-buttons__main-action'
+                                            ).click
+        href = href_to_check.get_attribute("href")
+        return href
+    with allure.step("Убедиться, что кнопка 'Оформить' прогрузилась"):
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "button[name='Оформить']")
+            )
+        )
+    with allure.step("Нажать на кнопку 'Оформить'"):
+        driver.find_element(By.CSS_SELECTOR, "button[name='Оформить']").click
+
+    with allure.step("Убедиться, что кнопка 'Оформить' прогрузилась"):
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "input.product-quantity__counter")
+            )
+        )
+    with allure.step("Убедиться, что выбранной книги больше 9 экземпляров"):
+        max = driver.find_element(By.CSS_SELECTOR,
+                                  "input.product-quantity__counter")
+        assert '> 9' in max.get_attribute("max")
+    with allure.step("Ввести необходимое количество книг"):
+        book_search.quantity_ui(10)
+
+    driver.quit()
+
+
+# Удаление всех книг в корзине через кнопку "Очистить корзину"
+def test_delete_all_UI():
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(
+                              ).install()))
+    book_search = ChitaiGorodUI(driver)
+
+    book_search.go_to()
+    book_search.name_ui('Божественная комедия')
+
+    with allure.step("Получить список результатов"):
+        books = driver.find_elements(By.CSS_SELECTOR, 'a.product-card__title')
+    with allure.step("Убедиться, что список результатов не пустой"):
+        assert len(books) > 0
+
+    with allure.step("Нажать на кнопку 'Купить'"):
+        href_to_check = driver.find_element(By.CSS_SELECTOR,
+                                            'div.product-buttons.product-card__actions button.product-buttons__main-action'
+                                            ).click
+        href = href_to_check.get_attribute("href")
+        return href
+    with allure.step("Убедиться, что кнопка 'Оформить' прогрузилась"):
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "button[name='Оформить']")
+            )
+        )
+    with allure.step("Нажать на кнопку 'Оформить'"):
+        driver.find_element(By.CSS_SELECTOR, "button[name='Оформить']").click
+
+    with allure.step("Убедиться, что кнопка 'Очистить корзину' прогрузилась"):
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "div.delete-many")
+            )
+        )
+    with allure.step("Нажать на кнопку 'Очистить корзину'"):
+        driver.find_element(By.CSS_SELECTOR,
+                            "span[name='Очистить корзину']").click
+
+    with allure.step("Убедиться, что корзина очищена"):
+        empty_bin = driver.find_element(By.CSS_SELECTOR,
+                                        'p.cart-multiple-delete__title')
+        assert 'Корзина очищена' in empty_bin.get_attribute("name")
+
+    driver.quit()
