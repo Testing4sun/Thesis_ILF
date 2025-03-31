@@ -56,9 +56,9 @@ def test_add_book_UI():
         assert len(books) > 0
 
     with allure.step("Нажать на кнопку 'Купить'"):
-        href_to_check = driver.find_element(By.CSS_SELECTOR,
-                                            'div.product-buttons.product-card__actions button.product-buttons__main-action'
-                                            ).click()
+        driver.find_element(By.CSS_SELECTOR,
+                            'div.product-buttons.product-card__actions button.product-buttons__main-action'
+                            ).click()
     with allure.step("Убедиться, что кнопка 'Оформить' прогрузилась"):
         WebDriverWait(driver, 20).until(
             EC.presence_of_all_elements_located(
@@ -89,9 +89,9 @@ def test_add_several_UI():
         assert len(books) > 0
 
     with allure.step("Нажать на кнопку 'Купить'"):
-        href_to_check = driver.find_element(By.CSS_SELECTOR,
-                                            'div.product-buttons.product-card__actions button.product-buttons__main-action'
-                                            ).click()
+        driver.find_element(By.CSS_SELECTOR,
+                            'div.product-buttons.product-card__actions button.product-buttons__main-action'
+                            ).click()
     with allure.step("Убедиться, что кнопка 'Оформить' прогрузилась"):
         WebDriverWait(driver, 20).until(
             EC.presence_of_all_elements_located(
@@ -132,9 +132,9 @@ def test_delete_all_UI():
         assert len(books) > 0
 
     with allure.step("Нажать на кнопку 'Купить'"):
-        href_to_check = driver.find_element(By.CSS_SELECTOR,
-                                            'div.product-buttons.product-card__actions button.product-buttons__main-action'
-                                            ).click()
+        driver.find_element(By.CSS_SELECTOR,
+                            'div.product-buttons.product-card__actions button.product-buttons__main-action'
+                            ).click()
     with allure.step("Убедиться, что кнопка 'Оформить' прогрузилась"):
         WebDriverWait(driver, 20).until(
             EC.presence_of_all_elements_located(

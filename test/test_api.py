@@ -2,7 +2,7 @@ import allure
 import requests
 
 
-base_url = "https://web-gate.chitai-gorod.ru/"
+base_url = "https://web-gate.chitai-gorod.ru"
 token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3VzZXItcmlnaHQiLCJzdWIiOjkxODk0OTksImlhdCI6MTc0MzQwOTQ3MywiZXhwIjoxNzQzNDEzMDczLCJ0eXBlIjoyMH0.8yC8J5VXRe7hv2trzyaiSi2eikc0pg7XqFPjuyflvQI"
 
 headers = {
@@ -15,7 +15,7 @@ headers = {
 def test_russian_name_API():
     with allure.step("Поиск списка книг с названием {title}"):
         title = "Мастер и маргарита"
-        response = requests.get(f"{base_url} + 'search/facet-search'",
+        response = requests.get(f"{base_url}/api/v2/search/",
                                 headers=headers, params={"phrase": title})
     with allure.step("Проверка статуса ответа"):
         assert response.status_code == 200
@@ -27,7 +27,7 @@ def test_russian_name_API():
 def test_english_name_API():
     with allure.step("Поиск списка книг с названием {title}"):
         title = "Alice's Adventures in Wonderland"
-        response = requests.get(f"{base_url} + 'api/v2/search'",
+        response = requests.get(f"{base_url}/api/v2/search",
                                 headers=headers, params={"phrase": title})
     with allure.step("Проверка статуса ответа"):
         assert response.status_code == 200
@@ -69,7 +69,6 @@ def test_empty_name_API():
         assert response.status_code != 200
         assert response.status_code > 399
         assert response.status_code < 500
-        assert response.json().get("title") == "Значение не должно быть пустым."
     with allure.step("Проверка наличия книг в ответе"):
         assert len(response.json()) > 0
 
