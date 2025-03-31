@@ -26,6 +26,7 @@ def test_russian_name_UI():
     driver.quit()
 
 
+@allure.feature("UI - тесты")
 @allure.title("Поиск по пустому названию")
 def test_empty_name_UI():
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(
@@ -41,6 +42,7 @@ def test_empty_name_UI():
     driver.quit()
 
 
+@allure.feature("UI - тесты")
 @allure.title("Добавление книги в корзину на странице поиска")
 def test_add_book_UI():
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(
@@ -74,6 +76,7 @@ def test_add_book_UI():
     driver.quit()
 
 
+@allure.feature("UI - тесты")
 @allure.title("Добавление книги в корзину в количестве 10 штук")
 def test_add_several_UI():
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(
@@ -117,6 +120,7 @@ def test_add_several_UI():
     driver.quit()
 
 
+@allure.feature("UI - тесты")
 @allure.title("Удаление всех книг в корзине через кнопку 'Очистить корзину'")
 def test_delete_all_UI():
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(

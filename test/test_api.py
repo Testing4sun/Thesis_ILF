@@ -35,6 +35,7 @@ def test_english_name_API():
         assert len(response.json()) > 0
 
 
+@allure.feature("API - тесты")
 @allure.title("Поиск по названию, содержащему цифры")
 def test_number_name_API():
     with allure.step("Поиск списка книг с названием {title}"):
@@ -47,6 +48,7 @@ def test_number_name_API():
         assert len(response.json()) > 0
 
 
+@allure.feature("API - тесты")
 @allure.title("Поиск с несуществующим названием")
 def test_notexisted_name_API():
     with allure.step("Поиск списка книг с названием {title}"):
@@ -54,11 +56,10 @@ def test_notexisted_name_API():
         response = requests.get(f"{base_url}/api/v2/search",
                                 headers=headers, params={"phrase": title})
     with allure.step("Проверка статуса ответа"):
-        assert response.status_code == 200
-    with allure.step("Проверка наличия книг в ответе"):
-        assert len(response.json()) > 0
+        assert response.status_code != 200
 
 
+@allure.feature("API - тесты")
 @allure.title("Поиск с некорректным/пустым названием")
 def test_empty_name_API():
     with allure.step("Поиск списка книг с пустым названием"):
@@ -69,10 +70,9 @@ def test_empty_name_API():
         assert response.status_code != 200
         assert response.status_code > 399
         assert response.status_code < 500
-    with allure.step("Проверка наличия книг в ответе"):
-        assert len(response.json()) > 0
 
 
+@allure.feature("API - тесты")
 @allure.title("Поиск по названию с ошибкой/опечаткой")
 def test_typo_name_API():
     with allure.step("Поиск списка книг с названием {title}"):
