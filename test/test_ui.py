@@ -8,7 +8,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service as ChromeService
 
 
-# Название на русском языке
+@allure.feature("UI - тесты")
+@allure.title("Поиск по названию на русском языке")
 def test_russian_name_UI():
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(
                               ).install()))
@@ -25,7 +26,7 @@ def test_russian_name_UI():
     driver.quit()
 
 
-# Пустое поле (поиск не осуществлен)
+@allure.title("Поиск по пустому названию")
 def test_empty_name_UI():
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(
                               ).install()))
@@ -40,7 +41,7 @@ def test_empty_name_UI():
     driver.quit()
 
 
-# Добавление книги в корзину на странице поиска
+@allure.title("Добавление книги в корзину на странице поиска")
 def test_add_book_UI():
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(
                               ).install()))
@@ -57,9 +58,7 @@ def test_add_book_UI():
     with allure.step("Нажать на кнопку 'Купить'"):
         href_to_check = driver.find_element(By.CSS_SELECTOR,
                                             'div.product-buttons.product-card__actions button.product-buttons__main-action'
-                                            ).click
-        href = href_to_check.get_attribute("href")
-        return href
+                                            ).click()
     with allure.step("Убедиться, что кнопка 'Оформить' прогрузилась"):
         WebDriverWait(driver, 20).until(
             EC.presence_of_all_elements_located(
@@ -67,15 +66,15 @@ def test_add_book_UI():
             )
         )
     with allure.step("Нажать на кнопку 'Оформить'"):
-        driver.find_element(By.CSS_SELECTOR, "button[name='Оформить']").click
+        driver.find_element(By.CSS_SELECTOR, "button[name='Оформить']").click()
 
     bin = driver.find_element(By.CSS_SELECTOR, "div.cart-item__content")
-    assert "{href}" in bin.get_attribute("href")
+    assert len(bin) > 0
 
     driver.quit()
 
 
-# Добавление книги в корзину в количестве 10 штук
+@allure.title("Добавление книги в корзину в количестве 10 штук")
 def test_add_several_UI():
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(
                               ).install()))
@@ -92,9 +91,7 @@ def test_add_several_UI():
     with allure.step("Нажать на кнопку 'Купить'"):
         href_to_check = driver.find_element(By.CSS_SELECTOR,
                                             'div.product-buttons.product-card__actions button.product-buttons__main-action'
-                                            ).click
-        href = href_to_check.get_attribute("href")
-        return href
+                                            ).click()
     with allure.step("Убедиться, что кнопка 'Оформить' прогрузилась"):
         WebDriverWait(driver, 20).until(
             EC.presence_of_all_elements_located(
@@ -102,7 +99,7 @@ def test_add_several_UI():
             )
         )
     with allure.step("Нажать на кнопку 'Оформить'"):
-        driver.find_element(By.CSS_SELECTOR, "button[name='Оформить']").click
+        driver.find_element(By.CSS_SELECTOR, "button[name='Оформить']").click()
 
     with allure.step("Убедиться, что кнопка 'Оформить' прогрузилась"):
         WebDriverWait(driver, 20).until(
@@ -120,7 +117,7 @@ def test_add_several_UI():
     driver.quit()
 
 
-# Удаление всех книг в корзине через кнопку "Очистить корзину"
+@allure.title("Удаление всех книг в корзине через кнопку 'Очистить корзину'")
 def test_delete_all_UI():
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(
                               ).install()))
@@ -137,9 +134,7 @@ def test_delete_all_UI():
     with allure.step("Нажать на кнопку 'Купить'"):
         href_to_check = driver.find_element(By.CSS_SELECTOR,
                                             'div.product-buttons.product-card__actions button.product-buttons__main-action'
-                                            ).click
-        href = href_to_check.get_attribute("href")
-        return href
+                                            ).click()
     with allure.step("Убедиться, что кнопка 'Оформить' прогрузилась"):
         WebDriverWait(driver, 20).until(
             EC.presence_of_all_elements_located(
@@ -147,7 +142,7 @@ def test_delete_all_UI():
             )
         )
     with allure.step("Нажать на кнопку 'Оформить'"):
-        driver.find_element(By.CSS_SELECTOR, "button[name='Оформить']").click
+        driver.find_element(By.CSS_SELECTOR, "button[name='Оформить']").click()
 
     with allure.step("Убедиться, что кнопка 'Очистить корзину' прогрузилась"):
         WebDriverWait(driver, 20).until(
@@ -157,7 +152,7 @@ def test_delete_all_UI():
         )
     with allure.step("Нажать на кнопку 'Очистить корзину'"):
         driver.find_element(By.CSS_SELECTOR,
-                            "span[name='Очистить корзину']").click
+                            "span[name='Очистить корзину']").click()
 
     with allure.step("Убедиться, что корзина очищена"):
         empty_bin = driver.find_element(By.CSS_SELECTOR,
